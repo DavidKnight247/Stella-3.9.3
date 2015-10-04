@@ -30,7 +30,11 @@ HelpDialog::HelpDialog(OSystem* osystem, DialogContainer* parent,
                        const GUI::Font& font)
   : Dialog(osystem, parent, 0, 0, 0, 0),
     myPage(1),
+#ifdef GCW0
+    myNumPages(2)
+#else
     myNumPages(5)
+#endif
 {
   const int lineHeight   = font.getLineHeight(),
             fontWidth    = font.getMaxCharWidth(),
@@ -41,9 +45,13 @@ HelpDialog::HelpDialog(OSystem* osystem, DialogContainer* parent,
   WidgetArray wid;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 46 * fontWidth + 10;
   _h = 12 * lineHeight + 20;
-
+#endif
   // Add Previous, Next and Close buttons
   xpos = 10;  ypos = _h - buttonHeight - 10;
   myPrevButton =
@@ -105,6 +113,28 @@ void HelpDialog::updateStrings(uInt8 page, uInt8 lines, string& title)
   uInt8 i = 0;
   switch(page)
   {
+#ifdef GCW0
+    case 1:
+      title = "Common commands:";
+      ADD_BIND("A",  "P1 Fire");
+      ADD_BIND("B",  "Select");
+      ADD_BIND("X",  "Enter command menu");
+      ADD_BIND("Y",  "P1 Fire5");
+      ADD_BIND("L", "Load game state");
+      ADD_BIND("R", "Save game state");
+      ADD_BIND("SELECT",  "Reset");
+      ADD_BIND("START",  "Enter options menu");
+      break;
+    case 2:
+      title = "All other commands:";
+      ADD_LINE;
+      ADD_BIND("Remapped Events", "");
+      ADD_TEXT("Most other commands can be");
+      ADD_TEXT("remapped.  Please consult the");
+      ADD_TEXT("'Input Settings' section for");
+      ADD_TEXT("more information.");
+      break;
+#else
     case 1:
       title = "Common commands:";
 #ifndef MAC_OSX
@@ -167,6 +197,7 @@ void HelpDialog::updateStrings(uInt8 page, uInt8 lines, string& title)
       ADD_TEXT("'Input Settings' section for");
       ADD_TEXT("more information.");
       break;
+#endif
   }
 
   while(i < lines)

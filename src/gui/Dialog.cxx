@@ -292,6 +292,9 @@ void Dialog::drawDialog()
   {
 //    cerr << "Dialog::drawDialog(): w = " << _w << ", h = " << _h << " @ " << &s << endl << endl;
 
+#ifdef GCW0
+    s.fillRect(0, 0, 320, 240, kShadowColor);
+#endif
     s.fillRect(_x, _y, _w, _h, kDlgColor);
     s.box(_x, _y, _w, _h, kColor, kShadowColor);
 

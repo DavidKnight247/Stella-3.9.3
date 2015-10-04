@@ -53,9 +53,13 @@ GameInfoDialog::GameInfoDialog(
   VariantList items, ports, ctrls;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 52 * fontWidth + 8;
   _h = 12 * (lineHeight + 4) + 10;
-
+#endif
   ////////////////////////////////////////////////////////////////////
   // Some of the following items are also present in GlobalPropsDialog
   // If any changes are ever made here, GlobalPropsDialog should also

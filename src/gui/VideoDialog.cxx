@@ -56,9 +56,13 @@ VideoDialog::VideoDialog(OSystem* osystem, DialogContainer* parent,
   VariantList items;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = BSPF_min(52 * fontWidth + 10, max_w);
   _h = BSPF_min(14 * (lineHeight + 4) + 10, max_h);
-
+#endif
   // The tab widget
   xpos = ypos = 5;
   myTab = new TabWidget(this, font, xpos, ypos, _w - 2*xpos, _h - buttonHeight - 20);

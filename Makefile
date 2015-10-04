@@ -47,7 +47,8 @@ include config.mak
 ifdef CXXFLAGS
   CXXFLAGS:= $(CXXFLAGS)
 else
-  CXXFLAGS:= -O2
+  CXXFLAGS:= -O3 -march=mips32r2 -funroll-loops -ffast-math --param large-function-growth=1600 --param inline-unit-growth=400
+
 endif
 CXXFLAGS+= -Wall 
 ifdef HAVE_GCC

@@ -302,6 +302,9 @@ void ContextMenu::handleJoyDown(int stick, int button)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void ContextMenu::handleJoyAxis(int stick, int axis, int value)
 {
+#ifdef GCW0 //Update menus with mouse emulated movements or cursor is not visible in HW/Double_buf.
+  setDirty();
+#endif
   if(value != 0)  // we don't care about 'axis up' events
     handleEvent(instance().eventHandler().eventForJoyAxis(stick, axis, value, kMenuMode));
 }

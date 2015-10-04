@@ -35,6 +35,10 @@
 
 #include "FrameBuffer.hxx"
 
+#ifdef GCW0
+#include <SDL_image.h>
+#endif
+
 #ifdef DEBUGGER_SUPPORT
   #include "Debugger.hxx"
 #endif
@@ -212,7 +216,11 @@ void FrameBuffer::update()
         myOSystem->console().fry();
 
       // And update the screen
+#ifdef GCW0
+      drawTIA(true);
+#else
       drawTIA(myRedrawEntireFrame);
+#endif
 
       // Show frame statistics
       if(myStatsMsg.enabled)
@@ -231,6 +239,7 @@ void FrameBuffer::update()
         myStatsMsg.surface->setPos(myImageRect.x() + 1, myImageRect.y() + 1);
         myStatsMsg.surface->update();
       }
+
       break;  // S_EMULATE
     }
 
@@ -258,11 +267,7 @@ void FrameBuffer::update()
     {
       // When onscreen messages are enabled in double-buffer mode,
       // a full redraw is required
-#ifdef GCWZERO
-//      myOSystem->menu().draw(true);
-#else
       myOSystem->menu().draw(myMsg.enabled && type() == kDoubleBuffer);
-#endif
       break;  // S_MENU
     }
 
@@ -270,19 +275,6 @@ void FrameBuffer::update()
     {
       // When onscreen messages are enabled in double-buffer mode,
       // a full redraw is required
-#ifdef GCWZERO
-      invalidate();
-      drawTIA(true);
-      myOSystem->commandMenu().draw(true);
-      postFrameUpdate();
-      invalidate();
-      drawTIA(true);
-      myOSystem->commandMenu().draw(true);
-      postFrameUpdate();
-      invalidate();
-      drawTIA(true);
-      myOSystem->commandMenu().draw(true);
-#endif
       myOSystem->commandMenu().draw(myMsg.enabled && type() == kDoubleBuffer);
       break;  // S_CMDMENU
     }
@@ -309,9 +301,32 @@ void FrameBuffer::update()
       return;
   }
 
-  // Draw any pending messages
+  // Draw any pending messages (such as "State saved" etc)
   if(myMsg.enabled)
     drawMessage();
+
+#ifdef GCW0
+  //draw mouse cursor if not emulating (modified code taken from my Genplus GCW0 code)
+  if(myOSystem->eventHandler().state() != EventHandler::S_EMULATE)
+  {
+        /* get mouse coordinates (absolute values) */
+        int x,y;
+        SDL_GetMouseState(&x,&y);
+
+        SDL_Rect lrect;
+        lrect.x = x-7;
+        lrect.y = y-7;
+        lrect.w = lrect.h = 15;
+
+        SDL_Surface *lightgunSurface;
+        lightgunSurface = IMG_Load("./CLASSIC_01_BLUE.png");
+        SDL_Rect srect;
+        srect.x = srect.y = 0;
+        srect.w = srect.h = 15;
+        SDL_BlitSurface(lightgunSurface, &srect, myScreen, &lrect);
+        SDL_FreeSurface(lightgunSurface);
+  }
+#endif
 
   // Do any post-frame stuff
   postFrameUpdate();
@@ -475,10 +490,7 @@ void FrameBuffer::refresh()
     case EventHandler::S_PAUSE:
       invalidate();
       drawTIA(true);
-#ifdef GCW02
-        postFrameUpdate();
-        invalidate();
-        drawTIA(true);
+#ifdef GCW0
         postFrameUpdate();
         invalidate();
         drawTIA(true);
@@ -496,10 +508,6 @@ void FrameBuffer::refresh()
       drawTIA(true);
       myOSystem->menu().draw(true);
 #ifdef GCW0
-      postFrameUpdate();
-      invalidate();
-      drawTIA(true);
-      myOSystem->menu().draw(true);
       postFrameUpdate();
       invalidate();
       drawTIA(true);

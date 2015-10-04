@@ -53,9 +53,13 @@ UIDialog::UIDialog(OSystem* osystem, DialogContainer* parent,
   ButtonWidget* b;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 37 * fontWidth + 10;
   _h = 11 * (lineHeight + 4) + 10;
-
+#endif
   // The tab widget
   xpos = ypos = vBorder;
   myTab = new TabWidget(this, font, xpos, ypos, _w - 2*xpos, _h - buttonHeight - 20);

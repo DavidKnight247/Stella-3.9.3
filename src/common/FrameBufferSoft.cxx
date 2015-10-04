@@ -1,8 +1,8 @@
 //============================================================================
 //
-//   SSSS    tt          lll  lll       
-//  SS  SS   tt           ll   ll        
-//  SS     tttttt  eeee   ll   ll   aaaa 
+//   SSSS    tt          lll  lll
+//  SS  SS   tt           ll   ll
+//  SS     tttttt  eeee   ll   ll   aaaa
 //   SSSS    tt   ee  ee  ll   ll      aa
 //      SS   tt   eeeeee  ll   ll   aaaaa  --  "An Atari 2600 VCS Emulator"
 //  SS  SS   tt   ee      ll   ll  aa  aa
@@ -92,14 +92,14 @@ bool FrameBufferSoft::setVidMode(VideoMode& mode)
   if(myScreen)
   {
     SDL_FillRect(myScreen, NULL, 0);
-#ifdef GCW02
+#ifdef GCW0
     SDL_Flip(myScreen);
 #else
     SDL_UpdateRect(myScreen, 0, 0, 0, 0);
 #endif
   }
-#ifdef GCW02
-  myScreen = SDL_SetVideoMode(mode.screen_w, mode.screen_h, 0, SDL_HWSURFACE | SDL_TRIPLEBUF | mySDLFlags);
+#ifdef GCW0
+  myScreen = SDL_SetVideoMode(mode.screen_w, mode.screen_h, 16, SDL_HWSURFACE | SDL_TRIPLEBUF | mySDLFlags);
 #else
   myScreen = SDL_SetVideoMode(mode.screen_w, mode.screen_h, 0, mySDLFlags);
 #endif
@@ -166,12 +166,50 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
 
   uInt8* currentFrame   = tia.currentFrameBuffer();
   uInt8* previousFrame  = tia.previousFrameBuffer();
-
   uInt32 width  = tia.width();
   uInt32 height = tia.height();
 
   switch(myRenderType)
   {
+#ifdef GCW0
+    case kSoftZoom_16:
+    {
+      SDL_LockSurface(myScreen);
+      uInt16* buffer    = (uInt16*)myScreen->pixels + myBaseOffset;
+      uInt32 bufofsY    = 0;
+      uInt32 screenofsY = 0;
+      for(uInt32 y = 0; y < height; ++y)
+      {
+        uInt32 pos = screenofsY;
+        for(uInt32 x = 0; x < width; x+=2)
+        {
+          const uInt32 bufofs = bufofsY + x;
+          uInt8 v = currentFrame[bufofs];
+          uInt8 w = previousFrame[bufofs];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = (uInt16) myDefPalette[v];
+            buffer[pos++] = (uInt16) myDefPalette[v];
+            myTiaDirty = true;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+1];
+          w = previousFrame[bufofs+1];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = (uInt16) myDefPalette[v];
+            buffer[pos++] = (uInt16) myDefPalette[v];
+            myTiaDirty = true;
+          }
+          else pos += 2;
+        }
+        screenofsY += myPitch;
+        bufofsY += width;
+      }
+      SDL_UnlockSurface(myScreen);
+      break;  // kSoftZoom_16
+    }
+#else
     case kSoftZoom_16:
     {
       SDL_LockSurface(myScreen);
@@ -188,7 +226,6 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
           {
             const uInt32 bufofs = bufofsY + x;
             uInt32 xstride = myZoomLevel;
-
             uInt8 v = currentFrame[bufofs];
             uInt8 w = previousFrame[bufofs];
 
@@ -212,6 +249,7 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
       break;  // kSoftZoom_16
     }
 
+#endif
     case kSoftZoom_24:
     {
       SDL_LockSurface(myScreen);
@@ -296,6 +334,47 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
       break;  // kSoftZoom_32
     }
 
+#ifdef GCW0
+    case kPhosphor_16:
+    {
+      SDL_LockSurface(myScreen);
+      uInt16* buffer    = (uInt16*)myScreen->pixels + myBaseOffset;
+      uInt32 bufofsY    = 0;
+      uInt32 screenofsY = 0;
+      for(uInt32 y = 0; y < height; ++y)
+      {
+        uInt32 pos = screenofsY;
+        for(uInt32 x = 0; x < width; x+=2)
+        {
+          const uInt32 bufofs = bufofsY + x;
+          uInt8 v = currentFrame[bufofs];
+          uInt8 w = previousFrame[bufofs];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            myTiaDirty = true;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+1];
+          w = previousFrame[bufofs+1];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            myTiaDirty = true;
+          }
+          else pos += 2;
+        }
+        screenofsY += myPitch;
+        bufofsY += width;
+      }
+      SDL_UnlockSurface(myScreen);
+      break;  // kPhosphor_16
+    }
+
+
+#else
     case kPhosphor_16:
     {
       SDL_LockSurface(myScreen);
@@ -330,6 +409,7 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
       myTiaDirty = true;
       break;  // kPhosphor_16
     }
+#endif
 
     case kPhosphor_24:
     {
@@ -420,26 +500,26 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void FrameBufferSoft::postFrameUpdate()
 {
-  if(myTiaDirty && !myInUIMode)
+  if(myTiaDirty && !myInUIMode) //used during emulation and showing initial menu
   {
-#ifdef GCW02
+#ifdef GCW0
     SDL_Flip(myScreen);
 #else
     SDL_UpdateRect(myScreen, 0, 0, 0, 0);
 #endif
     myTiaDirty = false;
   }
-  else if(myRectList->numRects() > 0)
+  else if(myRectList->numRects() > 0) //used to update menu highlighted buttons
   {
 //myRectList->print(myScreen->w, myScreen->h);
-#ifdef GCW02
+#ifdef GCW0
     SDL_Flip(myScreen);
 #else
     SDL_UpdateRects(myScreen, myRectList->numRects(), myRectList->rects());
 #endif
   }
 #ifdef GCW0
-//else    SDL_Flip(myScreen); //TESTING ONLY
+else    SDL_Flip(myScreen); //TESTING ONLY
 #endif
   myRectList->start();
 }
@@ -482,15 +562,9 @@ FBSurface* FrameBufferSoft::createSurface(int w, int h, bool isBase) const
 #endif
 
   SDL_Surface* surface = isBase ? myScreen :
-#ifdef GCW0
       SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, myFormat->BitsPerPixel,
                            myFormat->Rmask, myFormat->Gmask, myFormat->Bmask,
                            myFormat->Amask);
-#else
-      SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, myFormat->BitsPerPixel,
-                           myFormat->Rmask, myFormat->Gmask, myFormat->Bmask,
-                           myFormat->Amask);
-#endif
   return new FBSurfaceSoft(*this, surface, w, h, isBase);
 }
 
@@ -752,7 +826,7 @@ void FBSurfaceSoft::drawSurface(const FBSurface* surface, uInt32 tx, uInt32 ty)
   const FBSurfaceSoft* s = (const FBSurfaceSoft*) surface;
 
   SDL_Rect dstrect;
-#ifdef GCW02
+#ifdef GCW0
   dstrect.x = 0;
   dstrect.y = 0;
 #else
@@ -863,13 +937,8 @@ void FBSurfaceSoft::update()
     srcrect.h = myHeight;
 
     SDL_Rect dstrect;
-#ifdef GCW02
-    dstrect.x = 0;
-    dstrect.y = 0;
-#else
     dstrect.x = myXOrig;
     dstrect.y = myYOrig;
-#endif
     dstrect.w = myWidth;
     dstrect.h = myHeight;
 

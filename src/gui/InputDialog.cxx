@@ -49,9 +49,13 @@ InputDialog::InputDialog(OSystem* osystem, DialogContainer* parent,
   StringList actions;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = BSPF_min(50 * fontWidth + 10, max_w);
   _h = BSPF_min(14 * (lineHeight + 4) + 14, max_h);
-
+#endif
   // The tab widget
   xpos = 2; ypos = vBorder;
   myTab = new TabWidget(this, font, xpos, ypos, _w - 2*xpos, _h - buttonHeight - 20);

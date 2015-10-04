@@ -67,9 +67,13 @@ OptionsDialog::OptionsDialog(OSystem* osystem, DialogContainer* parent,
             buttonHeight = font.getLineHeight() + 6,
             rowHeight = font.getLineHeight() + 10;
 
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 2 * buttonWidth + 30;
   _h = 7 * rowHeight + 15;
-
+#endif
   int xoffset = 10, yoffset = 10;
   WidgetArray wid;
   ButtonWidget* b = NULL;

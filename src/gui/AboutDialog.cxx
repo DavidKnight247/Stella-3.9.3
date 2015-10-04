@@ -41,9 +41,13 @@ AboutDialog::AboutDialog(OSystem* osystem, DialogContainer* parent,
   WidgetArray wid;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 52 * fontWidth + 8;
   _h = 14 * lineHeight + 20;
-
+#endif
   // Add Previous, Next and Close buttons
   xpos = 10;  ypos = _h - buttonHeight - 10;
   myPrevButton =
@@ -110,6 +114,9 @@ void AboutDialog::updateStrings(int page, int lines, string& title)
     case 1:
       title = string("Stella ") + STELLA_VERSION;
       ADD_ATEXT("\\CA multi-platform Atari 2600 VCS emulator");
+#ifdef GCW0
+      ADD_ATEXT("\\CPorted to the GCW0 by David Knight 2015/10/04");
+#endif
       ADD_ATEXT(string("\\C\\c2Features: ") + instance().features());
       ADD_ATEXT(string("\\C\\c2") + instance().buildInfo());
       ADD_ALINE;

@@ -3,7 +3,7 @@
 CXX := mipsel-linux-g++
 CXXFLAGS :=   
 LD := mipsel-linux-g++
-LIBS +=  -L/opt/gcw0-toolchain/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/lib -lSDL -lpng -lz
+LIBS +=  -L/opt/gcw0-toolchain/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/lib -lSDL -lSDL_image -lpng -lz
 RANLIB := mipsel-linux-ranlib
 INSTALL := install
 AR := mipsel-linux-ar cru

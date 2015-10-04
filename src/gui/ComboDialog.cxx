@@ -54,8 +54,13 @@ ComboDialog::ComboDialog(GuiObject* boss, const GUI::Font& font,
   WidgetArray wid;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 35 * fontWidth + 10;
   _h = 11 * (lineHeight + 4) + 10;
+#endif
   xpos = ypos = 5;
 
   // Get maximum width of popupwidget

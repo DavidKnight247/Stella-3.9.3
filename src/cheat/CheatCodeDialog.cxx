@@ -48,9 +48,13 @@ CheatCodeDialog::CheatCodeDialog(OSystem* osystem, DialogContainer* parent,
   ButtonWidget* b;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 46 * fontWidth + 10;
   _h = 11 * (lineHeight + 4) + 10;
-
+#endif
   // List of cheats, with checkboxes to enable/disable
   xpos = 10;  ypos = 10;
   myCheatList =

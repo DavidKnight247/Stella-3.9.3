@@ -40,8 +40,13 @@ CommandDialog::CommandDialog(OSystem* osystem, DialogContainer* parent)
             rowHeight = font.getLineHeight() + 10;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 3 * (buttonWidth + 5) + 20;
   _h = 6 * rowHeight + 15;
+#endif
 
   WidgetArray wid;
   ButtonWidget* b[16];

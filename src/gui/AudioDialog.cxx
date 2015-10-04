@@ -51,9 +51,13 @@ AudioDialog::AudioDialog(OSystem* osystem, DialogContainer* parent,
   VariantList items;
 
   // Set real dimensions
+#ifdef GCW0
+  _w = 320;
+  _h = 240;
+#else
   _w = 35 * fontWidth + 10;
   _h = 7 * (lineHeight + 4) + 10;
-
+#endif
   // Volume
   xpos = 3 * fontWidth;  ypos = 10;
 
