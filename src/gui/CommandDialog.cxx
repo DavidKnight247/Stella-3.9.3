@@ -49,8 +49,11 @@ CommandDialog::CommandDialog(OSystem* osystem, DialogContainer* parent)
 #endif
 
   WidgetArray wid;
+#ifdef GCW0
+  ButtonWidget* b[17];
+#else
   ButtonWidget* b[16];
-
+#endif
   // Row 1
   int xoffset = 10, yoffset = 10;
   b[0] = addCDButton("Select", kSelectCmd);
@@ -82,10 +85,21 @@ CommandDialog::CommandDialog(OSystem* osystem, DialogContainer* parent)
   b[14] = addCDButton("Reload ROM", kReloadRomCmd);
 
   // Row 6
+#ifdef GCW0
+  xoffset = 10 ;  yoffset += buttonHeight + 3;
+  b[15] = addCDButton("Exit Menu", kCloseCmd);
+  addCancelWidget(b[15]);
+  b[16] = addCDButton("Exit Game", kExitCmd);
+#else
   xoffset = 10 + buttonWidth + 6;  yoffset += buttonHeight + 3;
   b[15] = addCDButton("Exit Game", kExitCmd);
+#endif
 
+#ifdef GCW0
+  for(uInt8 i = 0; i < 17; ++i)
+#else
   for(uInt8 i = 0; i < 16; ++i)
+#endif
     wid.push_back(b[i]);
 
   addToFocusList(wid);
@@ -184,6 +198,11 @@ void CommandDialog::handleCommand(CommandSender* sender, int cmd,
     case kExitCmd:
       instance().eventHandler().handleEvent(Event::LauncherMode, 1);
       break;
+#ifdef GCW0
+    case kCloseCmd:
+      instance().eventHandler().leaveMenuMode();
+      break;
+#endif
   }
 
   // Console commands show be performed right away, after leaving the menu
