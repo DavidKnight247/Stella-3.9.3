@@ -894,7 +894,11 @@ void FrameBuffer::setCursorState()
       myOSystem->eventHandler().state() == EventHandler::S_EMULATE;
   grabMouse(fullScreen() ||
     (emulation && myOSystem->settings().getBool("grabmouse")));
+#ifdef GCW0 //Don't show the cursor, we'll use our own.
+  showCursor(0);
+#else
   showCursor(!emulation);
+#endif
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
