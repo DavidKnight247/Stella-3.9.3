@@ -326,11 +326,11 @@ void EventHandler::poll(uInt64 time)
 #ifdef GCW0
   //mouse emulation
   static int move_left = 0, move_right = 0, move_up = 0, move_down = 0;
-  static int mouseTime = 0;
+  static int mouseTime = 0; //Controls speed of mouse emulation, speed linearly ramps up with time.
   if(move_left || move_right || move_up || move_down)
   {
 	int gcw_x, gcw_y;
-        mouseTime++;
+        if(mouseTime <= 42) mouseTime++; //The answer to life, the universe and maximum values of mouseTime :P
 	SDL_GetMouseState(&gcw_x, &gcw_y);
         int x = 1 + mouseTime / 7;
 	SDL_WarpMouse(gcw_x - x * move_left + x * move_right, gcw_y - x * move_up + x * move_down);
