@@ -125,7 +125,9 @@ void AboutDialog::updateStrings(int page, int lines, string& title)
       ADD_ALINE;
       ADD_ATEXT("\\CStella is now DonationWare!");
       ADD_ATEXT("\\C(http://stella.sf.net/donations.php)");
+#ifndef GCW0
       ADD_ALINE;
+#endif
       ADD_ATEXT("\\CStella is free software released under the GNU GPL");
       ADD_ATEXT("\\CSee manual for further details");
       break;
