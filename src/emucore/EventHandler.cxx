@@ -1714,25 +1714,18 @@ void EventHandler::setDefaultKeymap(Event::Type event, EventMode mode)
       SET_DEFAULT_KEY(KBDK_LEFT,      mode, Event::JoystickZeroLeft,  event);
       SET_DEFAULT_KEY(KBDK_RIGHT,     mode, Event::JoystickZeroRight, event);
 
-      SET_DEFAULT_KEY(KBDK_LCTRL,     mode, Event::JoystickZeroFire,  event); 		//A
-      SET_DEFAULT_KEY(KBDK_LALT,     mode, Event::ConsoleSelect,     event); 		//B
-      SET_DEFAULT_KEY(KBDK_LSHIFT, mode, Event::CmdMenuMode,       event);		//X
-//      SET_DEFAULT_KEY(KBDK_LSHIFT,         mode, Event::JoystickZeroFire5, event);	//X
-      SET_DEFAULT_KEY(KBDK_SPACE,         mode, Event::JoystickZeroFire9, event); 	//Y
+      SET_DEFAULT_KEY(KBDK_LCTRL,     mode, Event::JoystickZeroFire,  event); //A
+      SET_DEFAULT_KEY(KBDK_LALT,      mode, Event::ConsoleSelect,     event); //B
+      SET_DEFAULT_KEY(KBDK_LSHIFT,    mode, Event::CmdMenuMode,       event); //X
+      SET_DEFAULT_KEY(KBDK_SPACE,     mode, Event::JoystickZeroFire5, event); //Y
 
-      SET_DEFAULT_KEY(KBDK_BACKSPACE, mode, Event::SaveState,         event); 		//R
-      SET_DEFAULT_KEY(KBDK_TAB,       mode, Event::LoadState,         event); 		//L
-      SET_DEFAULT_KEY(KBDK_RETURN,    mode, Event::MenuMode,          event); 		//START
-      SET_DEFAULT_KEY(KBDK_ESCAPE,    mode, Event::ConsoleReset,      event); 		//SELECT
+      SET_DEFAULT_KEY(KBDK_BACKSPACE, mode, Event::SaveState,         event); //R
+      SET_DEFAULT_KEY(KBDK_TAB,       mode, Event::LoadState,         event); //L
+      SET_DEFAULT_KEY(KBDK_RETURN,    mode, Event::MenuMode,          event); //START
+      SET_DEFAULT_KEY(KBDK_ESCAPE,    mode, Event::ConsoleReset,      event); //SELECT
+      SET_DEFAULT_KEY(KBDK_PAUSE,     mode, Event::PauseMode,         event); //SLIDER DOWN
 
-//      SET_DEFAULT_KEY(KBDK_BACKSPACE, mode, Event::Fry,               event); 	//R
-
-//      SET_DEFAULT_KEY(KBDK_ESCAPE,    mode, Event::LauncherMode,      event); 	//SELECT
-      SET_DEFAULT_KEY(KBDK_PAUSE,     mode, Event::PauseMode,         event); 		//SLIDER DOWN
-
-
-
-
+/*
       SET_DEFAULT_KEY(KBDK_F3,        mode, Event::ConsoleColor,      event);
       SET_DEFAULT_KEY(KBDK_F4,        mode, Event::ConsoleBlackWhite, event);
       SET_DEFAULT_KEY(KBDK_F5,        mode, Event::ConsoleLeftDiffA,  event);
@@ -1741,6 +1734,7 @@ void EventHandler::setDefaultKeymap(Event::Type event, EventMode mode)
       SET_DEFAULT_KEY(KBDK_F8,        mode, Event::ConsoleRightDiffB, event);
       SET_DEFAULT_KEY(KBDK_F10,       mode, Event::ChangeState,       event);
       SET_DEFAULT_KEY(KBDK_F12,       mode, Event::TakeSnapshot,      event);
+*/
 #else
       SET_DEFAULT_KEY(KBDK_1,         mode, Event::KeyboardZero1,     event);
       SET_DEFAULT_KEY(KBDK_2,         mode, Event::KeyboardZero2,     event);
@@ -1812,20 +1806,17 @@ void EventHandler::setDefaultKeymap(Event::Type event, EventMode mode)
       SET_DEFAULT_KEY(KBDK_DOWN,      mode, Event::UIDown,    event);
       SET_DEFAULT_KEY(KBDK_LEFT,      mode, Event::UILeft,    event);
       SET_DEFAULT_KEY(KBDK_RIGHT,     mode, Event::UIRight,   event);
-
+      SET_DEFAULT_KEY(KBDK_RETURN,    mode, Event::UISelect,  event);
+      SET_DEFAULT_KEY(KBDK_BACKSPACE, mode, Event::UIPrevDir, event);
+#ifdef GCW0
+      SET_DEFAULT_KEY(KBDK_LALT,      mode, Event::UICancel,  event);
+#else
       SET_DEFAULT_KEY(KBDK_HOME,      mode, Event::UIHome,    event);
       SET_DEFAULT_KEY(KBDK_END,       mode, Event::UIEnd,     event);
       SET_DEFAULT_KEY(KBDK_PAGEUP,    mode, Event::UIPgUp,    event);
       SET_DEFAULT_KEY(KBDK_PAGEDOWN,  mode, Event::UIPgDown,  event);
-
-#ifdef GCW0
-      SET_DEFAULT_KEY(KBDK_LALT,    mode, Event::UICancel,  event);
-#else
       SET_DEFAULT_KEY(KBDK_ESCAPE,    mode, Event::UICancel,  event);
 #endif
-      SET_DEFAULT_KEY(KBDK_RETURN,    mode, Event::UISelect,  event);
-
-      SET_DEFAULT_KEY(KBDK_BACKSPACE, mode, Event::UIPrevDir, event);
       break;
 
     default:
