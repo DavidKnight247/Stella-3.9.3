@@ -186,7 +186,11 @@ GlobalPropsDialog::GlobalPropsDialog(GuiObject* boss, const GUI::Font& font)
   b = new ButtonWidget(this, font, 10, _h - buttonHeight - 10,
                        buttonWidth, buttonHeight, "Defaults", kDefaultsCmd);
   wid.push_back(b);
+#ifdef GCW0
+  addOKCancelBGroup(wid, font, "Load ROM", "Close(B)");
+#else
   addOKCancelBGroup(wid, font, "Load ROM", "Close");
+#endif
 
   addToFocusList(wid);
 }

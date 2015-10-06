@@ -66,7 +66,11 @@ EventMappingWidget::EventMappingWidget(GuiObject* boss, const GUI::Font& font,
   ypos += lineHeight + 10;
   myCancelMapButton = new ButtonWidget(boss, font, xpos, ypos,
                                        buttonWidth, buttonHeight,
+#ifdef GCW0
+                                       "Cancel(B)", kStopMapCmd);
+#else
                                        "Cancel", kStopMapCmd);
+#endif
   myCancelMapButton->setTarget(this);
   myCancelMapButton->clearFlags(WIDGET_ENABLED);
   addFocusWidget(myCancelMapButton);

@@ -87,7 +87,7 @@ CommandDialog::CommandDialog(OSystem* osystem, DialogContainer* parent)
   // Row 6
 #ifdef GCW0
   xoffset = 10 ;  yoffset += buttonHeight + 3;
-  b[15] = addCDButton("Exit Menu", kCloseCmd);
+  b[15] = addCDButton("Exit Menu (B)", kCloseCmd);
   addCancelWidget(b[15]);
   b[16] = addCDButton("Exit Game", kExitCmd);
 #else

@@ -90,22 +90,33 @@ OptionsDialog::OptionsDialog(OSystem* osystem, DialogContainer* parent,
   b = addODButton("Input Settings", kInptCmd);
   wid.push_back(b);
 
+#ifndef GCW0
   b = addODButton("UI Settings", kUsrIfaceCmd);
   wid.push_back(b);
-#ifndef GCW0
   b = addODButton("Snapshot Settings", kSnapCmd);
   wid.push_back(b);
-
   b = addODButton("Config Paths", kCfgPathsCmd);
   wid.push_back(b);
 #endif
   myRomAuditButton = addODButton("Audit ROMs", kAuditCmd);
   wid.push_back(myRomAuditButton);
+
+#ifndef GCW0
   // Move to second column
   xoffset += buttonWidth + 10;  yoffset = 10;
+#endif
 
   myGameInfoButton = addODButton("Game Properties", kInfoCmd);
   wid.push_back(myGameInfoButton);
+
+#ifdef GCW0
+  b = addODButton("Exit Game", kExitCmd);
+  wid.push_back(b);
+
+  // Move to second column
+  xoffset += buttonWidth + 10;  yoffset = 10;
+#endif
+
   myCheatCodeButton = addODButton("Cheat Code", kCheatCmd);
 #ifndef CHEATCODE_SUPPORT
   myCheatCodeButton->clearFlags(WIDGET_ENABLED);
@@ -121,7 +132,11 @@ OptionsDialog::OptionsDialog(OSystem* osystem, DialogContainer* parent,
   b = addODButton("About", kAboutCmd);
   wid.push_back(b);
 
+#ifdef GCW0
+  b = addODButton("Exit Menu (B)", kCloseCmd);
+#else
   b = addODButton("Exit Menu", kExitCmd);
+#endif
   wid.push_back(b);
   addCancelWidget(b);
 
@@ -129,8 +144,8 @@ OptionsDialog::OptionsDialog(OSystem* osystem, DialogContainer* parent,
   myVideoDialog    = new VideoDialog(osystem, parent, font, max_w, max_h);
   myAudioDialog    = new AudioDialog(osystem, parent, font);
   myInputDialog    = new InputDialog(osystem, parent, font, max_w, max_h);
-  myUIDialog       = new UIDialog(osystem, parent, font);
 #ifndef GCW0
+  myUIDialog       = new UIDialog(osystem, parent, font);
   mySnapshotDialog = new SnapshotDialog(osystem, parent, font, boss, max_w, max_h);
   myConfigPathDialog = new ConfigPathDialog(osystem, parent, font, boss, max_w, max_h);
   myRomAuditDialog = new RomAuditDialog(osystem, parent, font, max_w, max_h);
@@ -253,13 +268,25 @@ void OptionsDialog::handleCommand(CommandSender* sender, int cmd,
       myAboutDialog->open();
       break;
 
-    case kExitCmd:
+#ifdef GCW0
+    case kCloseCmd:
       if(myIsGlobal)
         close();
       else
         instance().eventHandler().leaveMenuMode();
       break;
 
+    case kExitCmd:
+      instance().eventHandler().handleEvent(Event::LauncherMode, 1);
+      break;
+#else
+    case kExitCmd:
+      if(myIsGlobal)
+        close();
+      else
+        instance().eventHandler().leaveMenuMode();
+      break;
+#endif
     default:
       Dialog::handleCommand(sender, cmd, data, 0);
   }

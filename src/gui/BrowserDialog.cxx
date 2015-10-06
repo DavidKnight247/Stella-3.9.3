@@ -98,7 +98,11 @@ BrowserDialog::BrowserDialog(GuiObject* boss, const GUI::Font& font,
   addFocusWidget(b);
   addOKWidget(b);
   b = new ButtonWidget(this, font, _w - (buttonWidth + 10), _h - buttonHeight - 10,
+#ifdef GCW0
+                       buttonWidth, buttonHeight, "Cancel(B)", kCloseCmd);
+#else
                        buttonWidth, buttonHeight, "Cancel", kCloseCmd);
+#endif
   addFocusWidget(b);
   addCancelWidget(b);
 #else

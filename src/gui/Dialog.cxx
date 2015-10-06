@@ -661,7 +661,11 @@ void Dialog::addOKCancelBGroup(WidgetArray& wid, const GUI::Font& font,
                                const string& okText, const string& cancelText)
 {
 
-  int buttonWidth  = BSPF_max(font.getStringWidth("Cancel"),
+#ifdef GCW0
+  int buttonWidth = BSPF_max(font.getStringWidth("Cancel(B)"),
+#else
+  int buttonWidth = BSPF_max(font.getStringWidth("Cancel"),
+#endif
                       BSPF_max(font.getStringWidth(okText),
                       font.getStringWidth(okText))) + 15;
   int buttonHeight = font.getLineHeight() + 4;
@@ -674,13 +678,21 @@ void Dialog::addOKCancelBGroup(WidgetArray& wid, const GUI::Font& font,
   addOKWidget(b);
   b = new ButtonWidget(this, font, _w - (buttonWidth + 10), _h - buttonHeight - 10,
                        buttonWidth, buttonHeight,
+#ifdef GCW0
+                       cancelText == "" ? "Cancel(B)" : cancelText, kCloseCmd);
+#else
                        cancelText == "" ? "Cancel" : cancelText, kCloseCmd);
+#endif
   wid.push_back(b);
   addCancelWidget(b);
 #else
   b = new ButtonWidget(this, font, _w - 2 * (buttonWidth + 7), _h - buttonHeight - 10,
                        buttonWidth, buttonHeight,
+#ifdef GCW0
+                       cancelText == "" ? "Cancel(B)" : cancelText, kCloseCmd);
+#else
                        cancelText == "" ? "Cancel" : cancelText, kCloseCmd);
+#endif
   wid.push_back(b);
   addCancelWidget(b);
   b = new ButtonWidget(this, font, _w - (buttonWidth + 10), _h - buttonHeight - 10,

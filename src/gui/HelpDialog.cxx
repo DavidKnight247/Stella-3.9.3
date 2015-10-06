@@ -69,7 +69,11 @@ HelpDialog::HelpDialog(OSystem* osystem, DialogContainer* parent,
   xpos = _w - buttonWidth - 10;
   ButtonWidget* b =
     new ButtonWidget(this, font, xpos, ypos, buttonWidth, buttonHeight,
+#ifdef GCW0
+                     "Close(B)", kCloseCmd);
+#else
                      "Close", kCloseCmd);
+#endif
   wid.push_back(b);
   addOKWidget(b);  addCancelWidget(b);
 

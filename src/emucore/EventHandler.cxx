@@ -1174,8 +1174,13 @@ void EventHandler::handleEvent(Event::Type event, int state)
       return;
 
     case Event::LauncherMode:
+#ifdef GCW0
+      if((myState == S_EMULATE || myState == S_CMDMENU ||
+          myState == S_MENU    || myState == S_DEBUGGER) && state)
+#else
       if((myState == S_EMULATE || myState == S_CMDMENU ||
           myState == S_DEBUGGER) && state)
+#endif
       {
         // Go back to the launcher, or immediately quit
         if(myOSystem->settings().getBool("exitlauncher") ||
