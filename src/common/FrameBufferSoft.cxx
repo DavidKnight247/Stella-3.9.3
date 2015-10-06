@@ -178,28 +178,75 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
       uInt16* buffer    = (uInt16*)myScreen->pixels + myBaseOffset;
       uInt32 bufofsY    = 0;
       uInt32 screenofsY = 0;
+      uInt8  ChangemyTiaDirty = 0;
       for(uInt32 y = 0; y < height; ++y)
       {
         uInt32 pos = screenofsY;
-        for(uInt32 x = 0; x < width; x+=2)
+        for(uInt32 x = 0; x < width; x+=8)
         {
           const uInt32 bufofs = bufofsY + x;
           uInt8 v = currentFrame[bufofs];
           uInt8 w = previousFrame[bufofs];
           if(v != w || fullRedraw)
           {
-            buffer[pos++] = (uInt16) myDefPalette[v];
-            buffer[pos++] = (uInt16) myDefPalette[v];
-            myTiaDirty = true;
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
           }
           else pos += 2;
           v = currentFrame[bufofs+1];
           w = previousFrame[bufofs+1];
           if(v != w || fullRedraw)
           {
-            buffer[pos++] = (uInt16) myDefPalette[v];
-            buffer[pos++] = (uInt16) myDefPalette[v];
-            myTiaDirty = true;
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+2];
+          w = previousFrame[bufofs+2];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+3];
+          w = previousFrame[bufofs+3];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+4];
+          w = previousFrame[bufofs+4];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+5];
+          w = previousFrame[bufofs+5];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+6];
+          w = previousFrame[bufofs+6];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+7];
+          w = previousFrame[bufofs+7];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myDefPalette[v];
+            ChangemyTiaDirty = 1;
           }
           else pos += 2;
         }
@@ -207,6 +254,8 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
         bufofsY += width;
       }
       SDL_UnlockSurface(myScreen);
+      if(ChangemyTiaDirty) myTiaDirty = true;
+
       break;  // kSoftZoom_16
     }
 #else
@@ -341,28 +390,75 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
       uInt16* buffer    = (uInt16*)myScreen->pixels + myBaseOffset;
       uInt32 bufofsY    = 0;
       uInt32 screenofsY = 0;
+      uInt8  ChangemyTiaDirty = 0;
       for(uInt32 y = 0; y < height; ++y)
       {
         uInt32 pos = screenofsY;
-        for(uInt32 x = 0; x < width; x+=2)
+        for(uInt32 x = 0; x < width; x+=8)
         {
           const uInt32 bufofs = bufofsY + x;
           uInt8 v = currentFrame[bufofs];
           uInt8 w = previousFrame[bufofs];
           if(v != w || fullRedraw)
           {
-            buffer[pos++] = (uInt16) myAvgPalette[v][w];
-            buffer[pos++] = (uInt16) myAvgPalette[v][w];
-            myTiaDirty = true;
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
           }
           else pos += 2;
           v = currentFrame[bufofs+1];
           w = previousFrame[bufofs+1];
           if(v != w || fullRedraw)
           {
-            buffer[pos++] = (uInt16) myAvgPalette[v][w];
-            buffer[pos++] = (uInt16) myAvgPalette[v][w];
-            myTiaDirty = true;
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+2];
+          w = previousFrame[bufofs+2];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+3];
+          w = previousFrame[bufofs+3];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+4];
+          w = previousFrame[bufofs+4];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+5];
+          w = previousFrame[bufofs+5];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+6];
+          w = previousFrame[bufofs+6];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
+          }
+          else pos += 2;
+          v = currentFrame[bufofs+7];
+          w = previousFrame[bufofs+7];
+          if(v != w || fullRedraw)
+          {
+            buffer[pos++] = buffer[pos++] = (uInt16) myAvgPalette[v][w];
+            ChangemyTiaDirty = 1;
           }
           else pos += 2;
         }
@@ -370,6 +466,7 @@ void FrameBufferSoft::drawTIA(bool fullRedraw)
         bufofsY += width;
       }
       SDL_UnlockSurface(myScreen);
+      if(ChangemyTiaDirty) myTiaDirty = true;
       break;  // kPhosphor_16
     }
 

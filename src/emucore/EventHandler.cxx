@@ -326,12 +326,15 @@ void EventHandler::poll(uInt64 time)
 #ifdef GCW0
   //mouse emulation
   static int move_left = 0, move_right = 0, move_up = 0, move_down = 0;
+  static int mouseTime = 0;
   if(move_left || move_right || move_up || move_down)
   {
 	int gcw_x, gcw_y;
+        mouseTime++;
 	SDL_GetMouseState(&gcw_x, &gcw_y);
-	SDL_WarpMouse(gcw_x - 4 * move_left + 4 * move_right, gcw_y - 4 * move_up + 4 * move_down);
-  }
+        int x = 1 + mouseTime / 7;
+	SDL_WarpMouse(gcw_x - x * move_left + x * move_right, gcw_y - x * move_up + x * move_down);
+  } else mouseTime = 0;
 
 #endif
 

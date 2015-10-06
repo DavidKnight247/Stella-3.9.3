@@ -866,11 +866,12 @@ void OSystem::setDefaultJoymap(Event::Type event, EventMode mode)
       break;
 
     case kMenuMode:  // Default menu/UI events
+#ifndef GCW0
       SET_DEFAULT_AXIS(Event::UILeft, mode, 0, 0, 0, event);
       SET_DEFAULT_AXIS(Event::UIRight, mode, 0, 0, 1, event);
       SET_DEFAULT_AXIS(Event::UIUp, mode, 0, 1, 0, event);
       SET_DEFAULT_AXIS(Event::UIDown, mode, 0, 1, 1, event);
-
+#endif
       // Left joystick (assume joystick zero, button zero)
       SET_DEFAULT_BTN(Event::UISelect, mode, 0, 0, event);
       // Right joystick (assume joystick one, button zero)

@@ -348,12 +348,6 @@ void Dialog::handleKeyDown(StellaKey key, StellaMod mod, char ascii)
     else if(key == KBDK_TAB)
       e = Event::UINavPrev;
   }
-#ifdef GCW0
-  else if(key == KBDK_LEFT && cycleTab(-1))
-    e = Event::UINavPrev;
-  else if(key == KBDK_RIGHT && cycleTab(+1))
-    e = Event::UINavNext;
-#endif
   else if(key == KBDK_TAB)
     e = Event::UINavNext;
 

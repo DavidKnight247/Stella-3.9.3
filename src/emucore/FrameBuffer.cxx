@@ -201,6 +201,9 @@ void FrameBuffer::update()
   // Determine which mode we are in (from the EventHandler)
   // Take care of S_EMULATE mode here, otherwise let the GUI
   // figure out what to draw
+#ifdef GCW0
+  static uInt8 exitMenu = 0;
+#endif
   switch(myOSystem->eventHandler().state())
   {
     case EventHandler::S_EMULATE:
@@ -216,7 +219,12 @@ void FrameBuffer::update()
         myOSystem->console().fry();
 
       // And update the screen
-#ifdef GCW0
+#ifdef GCW0 //force full redraw (due to issues with triple buffering causing graphical corruption)
+      if(exitMenu) 
+      {
+        exitMenu--;
+        invalidate();
+      }
       drawTIA(true);
 #else
       drawTIA(myRedrawEntireFrame);
@@ -268,6 +276,7 @@ void FrameBuffer::update()
       // When onscreen messages are enabled in double-buffer mode,
       // a full redraw is required
       myOSystem->menu().draw(myMsg.enabled && type() == kDoubleBuffer);
+      exitMenu = 3;
       break;  // S_MENU
     }
 
@@ -276,6 +285,7 @@ void FrameBuffer::update()
       // When onscreen messages are enabled in double-buffer mode,
       // a full redraw is required
       myOSystem->commandMenu().draw(myMsg.enabled && type() == kDoubleBuffer);
+      exitMenu = 3;
       break;  // S_CMDMENU
     }
 
@@ -491,9 +501,12 @@ void FrameBuffer::refresh()
       invalidate();
       drawTIA(true);
 #ifdef GCW0
-        postFrameUpdate();
-        invalidate();
-        drawTIA(true);
+      postFrameUpdate();
+      invalidate();
+      drawTIA(true);
+      postFrameUpdate();
+      invalidate();
+      drawTIA(true);
 #endif
       if(doubleBuffered)
       {
@@ -512,7 +525,11 @@ void FrameBuffer::refresh()
       invalidate();
       drawTIA(true);
       myOSystem->menu().draw(true);
-#else
+      postFrameUpdate();
+      invalidate();
+      drawTIA(true);
+      myOSystem->menu().draw(true);
+#endif
       if(doubleBuffered)
       {
         postFrameUpdate();
@@ -520,7 +537,6 @@ void FrameBuffer::refresh()
         drawTIA(true);
         myOSystem->menu().draw(true);
       }
-#endif
       break;
 
     case EventHandler::S_CMDMENU:

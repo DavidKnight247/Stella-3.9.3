@@ -2,7 +2,8 @@
 Name=Stella 3.9.3
 Comment=Atari 2600 emulator
 MimeType=application/zip;application/octet-stream;
-Exec=stella -holdreset %f
+# Exec=stella -holdreset %f
+Exec=stella %f
 Terminal=false
 Type=Application
 StartupNotify=true
